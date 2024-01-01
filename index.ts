@@ -12,19 +12,19 @@ console.log('Starting backend in ' + (isDevelopment ? 'development' : 'productio
 
 const serviceAccountPath = isDevelopment
   ? './certs/hiro-v1-firebase-adminsdk-n9cku-9c56012404.json'
-  : 'etc/secrets/hiro-v1-firebase-adminsdk-n9cku-9c56012404.json';
+  : '/etc/secrets/hiro-v1-firebase-adminsdk-n9cku-9c56012404.json';
 
 const keyPath = isDevelopment
   ? './certs/aws_private.pem.key'
-  : 'etc/secrets/aws_private.pem.key';
+  : '/etc/secrets/aws_private.pem.key';
 
 const certPath = isDevelopment
   ? './certs/backend_device_certificate.pem.crt'
-  : 'etc/secrets/backend_device_certificate.pem.crt';
+  : '/etc/secrets/backend_device_certificate.pem.crt';
 
 const caPath = isDevelopment
   ? './certs/AmazonRootCA1.pem'
-  : 'etc/secrets/AmazonRootCA1.pem';
+  : '/etc/secrets/AmazonRootCA1.pem';
 
 initializeApp({
   credential: cert(require(serviceAccountPath)),
