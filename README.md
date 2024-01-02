@@ -26,52 +26,23 @@ Before running the application, ensure you have the following prerequisites inst
 
 3. Set up AWS IoT and Firebase:
 
-    - Obtain AWS IoT credentials and update the following files in the `etc/secrets/` directory:
+    - Obtain AWS IoT credentials and update the following files in the `certs` directory:
         - `aws_private.pem.key`
         - `backend_device_certificate.pem.crt`
         - `AmazonRootCA1.pem`
         
     - Obtain Firebase credentials and update the `certs/hiro-v1-firebase-adminsdk-n9cku-9c56012404.json` file.
 
-4. Configure AWS IoT parameters:
 
-    Update the following parameters in the `index.js` file:
-    
-    ```javascript
-    const client = new awsIot.device({
-        keyPath: './etc/secrets/aws_private.pem.key',
-        certPath: './etc/secrets/backend_device_certificate.pem.crt',
-        caPath: './etc/secrets/AmazonRootCA1.pem',
-        clientId: 'BACKEND',
-        region: 'us-west-1',
-    host: 'a3ps9iapa1fps3-ats.iot.us-west-1.amazonaws.com',
-    });
-    ```
-
-5. Run the application:
+3. Run the application:
 
     ```bash
-    npm start
+    npm run dev
     ```
 
     The server will start and be accessible at `http://localhost:8080`.
 
 ## API Endpoints
-
-### GET /api
-
-Retrieve device information based on user and device identifiers.
-
-#### Parameters
-
-- `uid`: User identifier (string).
-- `deviceId`: Device identifier (string).
-
-#### Response
-
-- `200 OK`: Successful request. Returns device information.
-- `404 Not Found`: Device not found.
-- `401 Unauthorized`: Invalid token.
 
 ### POST /api
 

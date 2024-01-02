@@ -31,11 +31,12 @@ initializeApp({
 });
 
 const db = getFirestore();
+
 // Initialize AWS IoT client
 const client = new awsIot.device({
-  keyPath,
-  certPath,
-  caPath,
+  keyPath: keyPath,
+  certPath: certPath,
+  caPath: caPath,
   clientId: 'BACKEND',
   region: 'us-west-1',
   host: 'a3ps9iapa1fps3-ats.iot.us-west-1.amazonaws.com',
