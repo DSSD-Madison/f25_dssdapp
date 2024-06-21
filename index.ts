@@ -1,30 +1,24 @@
-import express from 'express';
-import awsIot from 'aws-iot-device-sdk';
+// Import required modules
+import express, { application } from 'express';
 import { initializeApp, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import dotenv from 'dotenv';
+import rateLimit from 'express-rate-limit';
+import path from 'path';
 
+// Load environment variables
 dotenv.config();
 
+// Environment configuration
 const isDevelopment = process.env.NODE_ENV === 'development';
+const PORT = process.env.PORT || 8080;
 
-console.log('Starting backend in ' + (isDevelopment ? 'development' : 'production') + ' mode');
+console.log(`Starting API in ${isDevelopment ? 'development' : 'production'} mode`);
 
+// Firebase configuration
 const serviceAccountPath = isDevelopment
-  ? './certs/hiro-v1-firebase-adminsdk-n9cku-9c56012404.json'
-  : '/etc/secrets/hiro-v1-firebase-adminsdk-n9cku-9c56012404.json';
-
-const keyPath = isDevelopment
-  ? './certs/aws_private.pem.key'
-  : '/etc/secrets/aws_private.pem.key';
-
-const certPath = isDevelopment
-  ? './certs/backend_device_certificate.pem.crt'
-  : '/etc/secrets/backend_device_certificate.pem.crt';
-
-const caPath = isDevelopment
-  ? './certs/AmazonRootCA1.pem'
-  : '/etc/secrets/AmazonRootCA1.pem';
+  ? './certs/oa-madison-firebase-adminsdk-tr5iw-80ae5b92fb.json'
+  : '/etc/secrets/oa-madison-firebase-adminsdk-tr5iw-80ae5b92fb.json';
 
 initializeApp({
   credential: cert(require(serviceAccountPath)),
@@ -32,102 +26,138 @@ initializeApp({
 
 const db = getFirestore();
 
-// Initialize AWS IoT client
-const client = new awsIot.device({
-  keyPath: keyPath,
-  certPath: certPath,
-  caPath: caPath,
-  clientId: 'BACKEND',
-  region: 'us-west-1',
-  host: 'a3ps9iapa1fps3-ats.iot.us-west-1.amazonaws.com',
-});
-
 // Initialize Express application
 const app = express();
-const port = 8080;
 
-// Add middleware for JSON parsing
+// Middleware
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Rate limiter configuration
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+});
+
+// Apply rate limiter to the API endpoint
+app.use('/apply', limiter);
+
+// Routes
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+interface ApplicationData {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  year: number;
+  essay_questions: string[];
+  urls: string[];
+}
+
+interface UpdateData {
+  applicationId: string;
+  applicationData: ApplicationData ;
+}
+
+// API endpoint for handling POST requests
+app.post('/apply', async (req, res) => {
+
+  const { 
+    first_name, 
+    last_name, 
+    email, 
+    phone_number, 
+    year, 
+    essay_questions, 
+    urls 
+  }: ApplicationData = req.body;
+  
+  // Validate request body
+  if (!first_name || !last_name || !email || !phone_number || !year || !essay_questions || !urls) {
+    return res.status(400).json({ error: 'Invalid request. All fields are required.', errorType: 'INVALID_REQUEST'});
+  }
+
+  // Add the data to the database
+  try {
+    const docRef = await db.collection('applications').add({
+      first_name,
+      last_name,
+      email,
+      phone_number,
+      year,
+      essay_questions,
+      urls,
+      timestamp: new Date()
+    });
+
+
+    return res.status(200).json({ message: 'Application submitted successfully', applicationId: docRef.id});
+  } 
+  catch (error) {
+    console.error('Error submitting application:', error);
+    return res.status(500).json({ error: 'DATABASE_ERROR' });
+  }
+});
+
+app.put('/apply', async (req, res) => {
+  const { 
+    applicationId,
+    applicationData
+  }: UpdateData = req.body;
+
+  // Validate request body
+  if (!applicationId || !applicationData) {
+    return res.status(400).json({ error: 'Invalid request. All fields are required.', errorType: 'INVALID_REQUEST'});
+  }
+
+  // Add the data to the database
+  try {
+    await db.collection('applications').doc(applicationId).set({
+      first_name: applicationData.first_name,
+      last_name: applicationData.last_name,
+      email: applicationData.email,
+      phone_number: applicationData.phone_number,
+      year: applicationData.year,
+      essay_questions: applicationData.essay_questions,
+      urls: applicationData.urls,
+      timestamp: new Date()
+    }, { merge: true });
+
+    return res.status(200).json({ message: 'Application updated successfully', applicationId: applicationId});
+  } 
+  catch (error) {
+    console.error('Error updating application:', error);
+    return res.status(500).json({ error: 'DATABASE_ERROR' });
+  }
+})
+
+app.delete('/apply', async (req, res) => {
+  const { applicationId } = req.body;
+
+  // Validate request body
+  if (!applicationId) {
+    return res.status(400).json({ error: 'Invalid request. All fields are required.', errorType: 'INVALID_REQUEST'});
+  }
+
+  // Add the data to the database
+  try {
+    await db.collection('applications').doc(applicationId).delete();
+
+    return res.status(200).json({ message: 'Application deleted successfully', applicationId: applicationId});
+  } 
+  catch (error) {
+    console.error('Error deleting application:', error);
+    return res.status(500).json({ error: 'DATABASE_ERROR' });
+  }
+})
+
 app.use(express.json());
 
 // Start the Express server
-app.listen(port, () => { 
-  console.log(`Server is running on port ${port}`);
-  // Event handler when the AWS IoT client connects
-  client.on("connect", () => {
-    console.log("Backend has now connected to AWS IoT");
-  });
-
-  // Event handler for receiving messages from AWS IoT
-  client.on("message", (topic, payload) => {
-    console.log("Message received from AWS IoT:", topic, payload.toString());
-  });
-
-  client.on("close", () => {
-    console.log("Backend has now disconnected from AWS IoT");
-  }); 
-
-  client.on("error", (error) => {
-    console.error("Error:", error);
-  });
-
-  client.on("reconnect", () => {
-    console.log("Backend has now reconnected to AWS IoT");
-  });
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
-// API endpoint for handling POST requests
-app.post('/api', async (req, res) => {
-  interface RequestBody {
-    uid: string;
-    topic: string;
-    data: { id: string };
-  }
-
-  const { uid, topic, data }: RequestBody = req.body;
-
-  console.log('POST request received from ' + req.body.uid);
-
-  // Check token validity and required parameters
-  if (uid && await checkCred(uid) && topic && data) {
-    // Publish message to AWS IoT
-    client.publish(topic, JSON.stringify(data));
-    // Query the Firestore collection for the provided uid and deviceId
-    db.collection('devices').doc(`${data.id}`).get()
-      .then((doc) => {
-        // If the document exists, update it
-        if (doc.exists) {
-          db.collection('devices').doc(`${data.id}`).update(data);
-        } else { 
-          // If the document doesn't exist, create it
-          db.collection('devices').doc(`${data.id}`).set(data);
-        }
-        res.status(200).json({ msg: `Message successfully sent to ${topic}` });
-      })
-      .catch((error) => {
-        console.log(error);
-        res.status(500).json({ error: error });
-      });
-    // Return success message
-  } else {
-    res.status(401).json({ error: 'Invalid token or missing parameters' });
-  }
-});
-
-async function checkCred(uid: string): Promise<boolean> {
-  try {
-    const userCollection = db.collection('users');
-
-    // Query the Firestore collection for the provided uid and token
-    const userDoc = await userCollection.doc(uid).get();
-
-    // If the document exists and the token matches, consider it valid
-    if (userDoc.exists && userDoc.data()?.uid === uid) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    console.error('Error checking token:', error);
-    return false; // Return false in case of an error
-  }
-}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply into UW Madison Data Science for Sustainable Development</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #c5050c;
+            border-bottom: 2px solid #c5050c;
+            padding-bottom: 10px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .apply-button {
+            display: inline-block;
+            background-color: #c5050c;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .apply-button:hover {
+            background-color: #9b0000;
+        }
+        .api-info, .error-codes {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .error-code {
+            margin-bottom: 15px;
+        }
+        .error-code h3 {
+            color: #c5050c;
+            margin-bottom: 5px;
+        }
+        pre {
+            background-color: #272822;
+            color: #f8f8f2;
+            border-radius: 4px;
+            padding: 15px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .json-key {
+            color: #2488db;
+        }
+        .json-string {
+            color: #2ea043;
+        }
+        .json-number {
+            color: #B267E6;
+        }
+        .apply-code{
+            font-size: 1.5em;
+            margin: 0;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Apply Into UW Madison Data Science for Sustainable Development</h1>
+    <p>
+        As a student in our program, you will have the opportunity to:
+    </p>
+    <ul>
+        <li>Engage in hands-on projects and research collaborations with industry partners</li>
+        <li>Develop high-value skills in software development</li>
+        <li>Build a network of highly motivated, passionate, and intelligent peers</li>
+        <li>Create solutions to real-life problems</li>
+        <li>Apply data and computer science to real-world problems in sustainability and more</li>
+    </ul>
+    <h3 class='apply-code'><code>Apply Today by Sending a POST request to the endpoint /apply</code></h3>
+    <a href="https://madison.dssdglobal.org/" target='_blank' class="apply-button">Learn More & Visit Our Main Website</a>
+    <div class="api-info">
+        <h2>API Information</h2>
+        <h3>POST /apply</h3>
+        <p>
+            To submit a new application, send a POST request to the /apply endpoint with the following JSON structure:
+        </p>
+        <pre><code>{
+  <span class="json-key">"first_name"</span>: <span class="json-string">"String"</span>,
+  <span class="json-key">"last_name"</span>: <span class="json-string">"String"</span>,
+  <span class="json-key">"email"</span>: <span class="json-string">"String"</span>,
+  <span class="json-key">"phone_number"</span>: <span class="json-string">"String"</span>,
+  <span class="json-key">"year"</span>: <span class="json-number">Number</span>,
+  <span class="json-key">"essay_questions"</span>: [<span class="json-string">"String"</span>],
+  <span class="json-key">"urls"</span>: [<span class="json-string">"String"</span>]
+}</code></pre>
+        <p>
+            The API will return a JSON response with the following structure:
+        </p>
+        <pre><code>{
+  <span class="json-key">"message"</span>: <span class="json-string">"Application submitted successfully"</span>, 
+  <span class="json-key">"applicationId"</span>: <span class="json-string">"YOUR_APPLICATION_ID"</span>
+}</code></pre>
+
+        <h3>PUT /apply</h3>
+        <p>
+            To update an existing application, send a PUT request to the /apply endpoint with the following JSON structure:
+        </p>
+        <pre><code>{
+  <span class="json-key">"applicationId"</span>: <span class="json-string">"String"</span>,
+  <span class="json-key">"applicationData"</span>: {
+    <span class="json-key">"first_name"</span>: <span class="json-string">"String"</span>,
+    <span class="json-key">"last_name"</span>: <span class="json-string">"String"</span>,
+    <span class="json-key">"email"</span>: <span class="json-string">"String"</span>,
+    <span class="json-key">"phone_number"</span>: <span class="json-string">"String"</span>,
+    <span class="json-key">"year"</span>: <span class="json-number">Number</span>,
+    <span class="json-key">"essay_questions"</span>: [<span class="json-string">"String"</span>],
+    <span class="json-key">"urls"</span>: [<span class="json-string">"String"</span>]
+  }
+}</code></pre>
+        <p>
+            The API will return a JSON response with the following structure:
+        </p>
+        <pre><code>{
+  <span class="json-key">"message"</span>: <span class="json-string">"Application updated successfully"</span>, 
+  <span class="json-key">"applicationId"</span>: <span class="json-string">"YOUR_APPLICATION_ID"</span>
+}</code></pre>
+
+        <h3>DELETE /apply</h3>
+        <p>
+            To delete an existing application, send a DELETE request to the /apply endpoint with the following JSON structure:
+        </p>
+        <pre><code>{
+  <span class="json-key">"applicationId"</span>: <span class="json-string">"String"</span>
+}</code></pre>
+        <p>
+            The API will return a JSON response with the following structure:
+        </p>
+        <pre><code>{
+  <span class="json-key">"message"</span>: <span class="json-string">"Application deleted successfully"</span>, 
+  <span class="json-key">"applicationId"</span>: <span class="json-string">"YOUR_APPLICATION_ID"</span>
+}</code></pre>
+    </div>
+    <div class="error-codes">
+        <h2>Error Codes and Troubleshooting</h2>
+        <p>If you encounter an error while using our API, please refer to the following error codes and instructions:</p>
+        
+        <div class="error-code">
+            <h3>INVALID_REQUEST (400)</h3>
+            <p>This error occurs when the request is missing required fields or contains invalid data.</p>
+            <p><strong>What to do:</strong> Double-check your request body to ensure all required fields are present and correctly formatted. Refer to the API Information section above for the correct structure.</p>
+        </div>
+        
+        <div class="error-code">
+            <h3>DATABASE_ERROR (500)</h3>
+            <p>This error indicates a problem with our database while processing your application.</p>
+            <p><strong>What to do:</strong> Please try submitting your application again after a few minutes. If the problem persists, contact our support team.</p>
+        </div>
+        
+        <div class="error-code">
+            <h3>RATE_LIMIT_EXCEEDED</h3>
+            <p>You've sent too many requests in a short period of time.</p>
+            <p><strong>What to do:</strong> Wait for at least 15 minutes before trying to submit your application again. If you need to submit multiple applications, please space out your requests.</p>
+        </div>
+    </div>
+</body>
+</html>
