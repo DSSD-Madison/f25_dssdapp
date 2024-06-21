@@ -1,78 +1,140 @@
-# Backend Service README
+# UW Madison Data Science for Sustainable Development API
 
-This repository contains a Node.js application that serves as a backend service. The purpose of this service is to interact with both AWS IoT and Firebase services, providing an interface for managing and retrieving information related to devices.
+## Overview
+
+This API serves as the backend for the application process to the UW Madison Data Science for Sustainable Development program. It provides endpoints for submitting, updating, and deleting applications.
+
+## Table of Contents
+
+1. [Prerequisites](#prerequisites)
+2. [Installation](#installation)
+3. [Configuration](#configuration)
+4. [Running the Application](#running-the-application)
+5. [API Endpoints](#api-endpoints)
+6. [Rate Limiting](#rate-limiting)
+7. [Error Handling](#error-handling)
+8. [Development vs Production](#development-vs-production)
+9. [Contributing](#contributing)
+10. [License](#license)
 
 ## Prerequisites
 
-Before running the application, ensure you have the following prerequisites installed:
+- Node.js (v14 or later recommended)
+- npm (comes with Node.js)
+- Firebase account and project
+- Firebase Admin SDK credentials
 
-- [Node.js](https://nodejs.org/)
-- [npm](https://www.npmjs.com/) (Node Package Manager)
+## Installation
 
-## Getting Started
+1. Clone the repository:
+   ```
+   git clone [your-repo-url]
+   cd [your-repo-name]
+   ```
 
-1. Clone this repository to your local machine:
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-    ```bash
-    git clone *ENTER REPO URL HERE*
-    ```
+## Configuration
 
-2. Install the project dependencies:
+1. Create a `.env` file in the root directory with the following contents:
+   ```
+   PORT=8080
+   NODE_ENV=development
+   ```
 
-    ```bash
-    cd *ENTER REPO NAME HERE*
-    npm install
-    ```
+2. Place your Firebase Admin SDK credentials file in the appropriate location:
+   - For development: `./certs/oa-madison-firebase-adminsdk-tr5iw-80ae5b92fb.json`
+   - For production: `/etc/secrets/oa-madison-firebase-adminsdk-tr5iw-80ae5b92fb.json`
 
-3. Set up AWS IoT and Firebase:
+## Running the Application
 
-    - Obtain AWS IoT credentials and update the following files in the `certs` directory:
-        - `aws_private.pem.key`
-        - `backend_device_certificate.pem.crt`
-        - `AmazonRootCA1.pem`
-        
-    - Obtain Firebase credentials and update the `certs/hiro-v1-firebase-adminsdk-n9cku-9c56012404.json` file.
+To start the server:
 
+```
+npm start
+```
 
-3. Run the application:
+For development with auto-restart on file changes:
 
-    ```bash
-    npm run dev
-    ```
-
-    The server will start and be accessible at `http://localhost:8080`.
+```
+npm run dev
+```
 
 ## API Endpoints
 
-### POST /api
+### POST /apply
 
-Send data to AWS IoT and update Firebase Firestore with device information.
+Submit a new application.
 
-#### Request Body
-
+Request body:
 ```json
 {
-  "uid": "user-uid",
-  "topic": "iot-topic",
-  "data": {
-    "deviceId": "device-id",
-    // Additional data fields
+  "first_name": "String",
+  "last_name": "String",
+  "email": "String",
+  "phone_number": "String",
+  "year": Number,
+  "essay_questions": ["String"],
+  "urls": ["String"]
+}
+```
+
+### PUT /apply
+
+Update an existing application.
+
+Request body:
+```json
+{
+  "applicationId": "String",
+  "applicationData": {
+    "first_name": "String",
+    "last_name": "String",
+    "email": "String",
+    "phone_number": "String",
+    "year": Number,
+    "essay_questions": ["String"],
+    "urls": ["String"]
   }
 }
 ```
 
-#### Response
+### DELETE /apply
 
-- `200 OK`: Successful request. Returns success message.
-- `401 Unauthorized`: Invalid token or missing parameters.
+Delete an existing application.
 
-## Token Validation
+Request body:
+```json
+{
+  "applicationId": "String"
+}
+```
 
-Token validation is performed using Firebase Firestore. The `checkCred` function checks the validity of the provided token by querying the Firestore collection for the user's information.
+## Rate Limiting
+
+The API implements rate limiting to prevent abuse. Each IP is limited to 100 requests per 15-minute window.
+
+## Error Handling
+
+The API returns appropriate HTTP status codes and error messages:
+
+- 400: Invalid request (missing or invalid fields)
+- 500: Database error
+- 429: Rate limit exceeded
+
+## Development vs Production
+
+The application detects the environment based on the `NODE_ENV` variable:
+
+- `development`: Uses local credentials file and enables additional logging.
+- `production`: Uses credentials file from `/etc/secrets/` and optimizes for performance.
 
 ## Contributing
 
-If you find any issues or have suggestions for improvement, feel free to open an issue or create a pull request.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## License
 
