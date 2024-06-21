@@ -1,4 +1,4 @@
-# UW Madison Data Science for Sustainable Development API
+# UW Madison Data Science for Sustainable Development Application API
 
 ## Overview
 
