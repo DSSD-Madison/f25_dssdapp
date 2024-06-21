@@ -132,6 +132,10 @@ The application detects the environment based on the `NODE_ENV` variable:
 - `development`: Uses local credentials file and enables additional logging.
 - `production`: Uses credentials file from `/etc/secrets/` and optimizes for performance.
 
+## Production Deployment
+
+The application is deployed to a Render web service. The deployment process is *NOT* automated.
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.

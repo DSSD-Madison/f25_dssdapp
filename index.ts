@@ -1,5 +1,5 @@
 // Import required modules
-import express, { application } from 'express';
+import express from 'express';
 import { initializeApp, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import dotenv from 'dotenv';
