@@ -82,6 +82,13 @@ Request body:
 }
 ```
 
+Response:
+```json
+{
+  "message": "Application submitted successfully"
+}
+```
+
 ### PUT /apply
 
 Update an existing application.
@@ -89,7 +96,7 @@ Update an existing application.
 Request body:
 ```json
 {
-  "applicationId": "String",
+  "email": "YOUR_EMAIL",
   "applicationData": {
     "first_name": "String",
     "last_name": "String",
@@ -102,6 +109,13 @@ Request body:
 }
 ```
 
+Response:
+```json
+{
+  "message": "Application updated successfully"
+}
+```
+
 ### DELETE /apply
 
 Delete an existing application.
@@ -109,21 +123,28 @@ Delete an existing application.
 Request body:
 ```json
 {
-  "applicationId": "String"
+  "email": "YOUR_EMAIL"
+}
+```
+
+Response:
+```json
+{
+  "message": "Application deleted successfully"
 }
 ```
 
 ## Rate Limiting
 
-The API implements rate limiting to prevent abuse. Each IP is limited to 100 requests per 15-minute window.
+The API implements rate limiting to prevent abuse. Each IP is limited to 100 requests per 15-minute window. If you exceed the rate limit, wait for at least 15 minutes before trying to submit your application again.
 
 ## Error Handling
 
 The API returns appropriate HTTP status codes and error messages:
 
-- 400: Invalid request (missing or invalid fields)
-- 500: Database error
-- 429: Rate limit exceeded
+- INVALID_REQUEST (400): Missing required fields or invalid data
+- DATABASE_ERROR (500): Problem with the database while processing the application
+- RATE_LIMIT_EXCEEDED (429): Too many requests in a short period of time
 
 ## Development vs Production
 
@@ -132,10 +153,6 @@ The application detects the environment based on the `NODE_ENV` variable:
 - `development`: Uses local credentials file and enables additional logging.
 - `production`: Uses credentials file from `/etc/secrets/` and optimizes for performance.
 
-## Production Deployment
-
-The application is deployed to a Render web service. The deployment process is *NOT* automated.
-
 ## Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
@@ -143,3 +160,15 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## Program Benefits
+
+As a student in our program, you will have the opportunity to:
+
+- Engage in hands-on projects and research collaborations with industry partners
+- Develop high-value skills in software development
+- Build a network of highly motivated, passionate, and intelligent peers
+- Create solutions to real-life problems
+- Apply data and computer science to real-world problems in sustainability and more
+
+For more information about the program and to visit the main website, go to [https://madison.dssdglobal.org/](https://madison.dssdglobal.org/).

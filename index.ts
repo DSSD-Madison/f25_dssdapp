@@ -82,7 +82,7 @@ app.post('/apply', async (req, res) => {
 
   // Add the data to the database
   try {
-    const docRef = await db.collection('applications').add({
+    const docRef = await db.collection('applications').doc(email).set({
       first_name,
       last_name,
       email,
@@ -94,7 +94,7 @@ app.post('/apply', async (req, res) => {
     });
 
 
-    return res.status(200).json({ message: 'Application submitted successfully', applicationId: docRef.id});
+    return res.status(200).json({ message: 'Application submitted successfully'});
   } 
   catch (error) {
     console.error('Error submitting application:', error);
@@ -115,7 +115,7 @@ app.put('/apply', async (req, res) => {
 
   // Add the data to the database
   try {
-    await db.collection('applications').doc(applicationId).set({
+    await db.collection('applications').doc(applicationData.email).set({
       first_name: applicationData.first_name,
       last_name: applicationData.last_name,
       email: applicationData.email,
@@ -126,7 +126,7 @@ app.put('/apply', async (req, res) => {
       timestamp: new Date()
     }, { merge: true });
 
-    return res.status(200).json({ message: 'Application updated successfully', applicationId: applicationId});
+    return res.status(200).json({ message: 'Application updated successfully'});
   } 
   catch (error) {
     console.error('Error updating application:', error);
@@ -135,18 +135,18 @@ app.put('/apply', async (req, res) => {
 })
 
 app.delete('/apply', async (req, res) => {
-  const { applicationId } = req.body;
+  const { email } = req.body;
 
   // Validate request body
-  if (!applicationId) {
+  if (!email) {
     return res.status(400).json({ error: 'Invalid request. All fields are required.', errorType: 'INVALID_REQUEST'});
   }
 
   // Add the data to the database
   try {
-    await db.collection('applications').doc(applicationId).delete();
+    await db.collection('applications').doc(email).delete();
 
-    return res.status(200).json({ message: 'Application deleted successfully', applicationId: applicationId});
+    return res.status(200).json({ message: 'Application deleted successfully', email: email});
   } 
   catch (error) {
     console.error('Error deleting application:', error);

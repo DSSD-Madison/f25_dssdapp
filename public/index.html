@@ -110,15 +110,13 @@
         </p>
         <pre><code>{
   <span class="json-key">"message"</span>: <span class="json-string">"Application submitted successfully"</span>, 
-  <span class="json-key">"applicationId"</span>: <span class="json-string">"YOUR_APPLICATION_ID"</span>
 }</code></pre>
-
         <h3>PUT /apply</h3>
         <p>
             To update an existing application, send a PUT request to the /apply endpoint with the following JSON structure:
         </p>
         <pre><code>{
-  <span class="json-key">"applicationId"</span>: <span class="json-string">"String"</span>,
+  <span class="json-key">"email"</span>: <span class="json-string">"YOUR_EMAIL"</span>,
   <span class="json-key">"applicationData"</span>: {
     <span class="json-key">"first_name"</span>: <span class="json-string">"String"</span>,
     <span class="json-key">"last_name"</span>: <span class="json-string">"String"</span>,
@@ -134,7 +132,6 @@
         </p>
         <pre><code>{
   <span class="json-key">"message"</span>: <span class="json-string">"Application updated successfully"</span>, 
-  <span class="json-key">"applicationId"</span>: <span class="json-string">"YOUR_APPLICATION_ID"</span>
 }</code></pre>
 
         <h3>DELETE /apply</h3>
@@ -142,14 +139,13 @@
             To delete an existing application, send a DELETE request to the /apply endpoint with the following JSON structure:
         </p>
         <pre><code>{
-  <span class="json-key">"applicationId"</span>: <span class="json-string">"String"</span>
+  <span class="json-key">"email"</span>: <span class="json-string">"YOUR_EMAIL"</span>
 }</code></pre>
         <p>
             The API will return a JSON response with the following structure:
         </p>
         <pre><code>{
   <span class="json-key">"message"</span>: <span class="json-string">"Application deleted successfully"</span>, 
-  <span class="json-key">"applicationId"</span>: <span class="json-string">"YOUR_APPLICATION_ID"</span>
 }</code></pre>
     </div>
     <div class="error-codes">
