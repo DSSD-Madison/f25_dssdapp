@@ -76,7 +76,7 @@ app.post('/apply', async (req : any, res : any) => {
   }: ApplicationData = req.body;
   
   // Validate request body
-  if (!first_name || !last_name || !email || !phone_number || !year || why_do_you_want_to_join || !urls) {
+  if (!first_name || !last_name || !email || !phone_number || !year || !why_do_you_want_to_join || !urls) {
     return res.status(400).json({ error: 'Invalid request. All fields are required.', errorType: 'INVALID_REQUEST'});
   }
 
