@@ -92,7 +92,6 @@ app.post('/apply', async (req : any, res : any) => {
       why_do_you_want_to_join,
       timestamp: new Date()
     });
-    console.log(docRef)
     return res.status(200).json({ message: 'Application submitted successfully', "applicationId": docRef.id });
   } 
   catch (error) {
