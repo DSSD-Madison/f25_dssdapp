@@ -43,7 +43,7 @@ const limiter = rateLimit({
 app.use('/apply', limiter);
 
 // Routes
-app.get('/', (req, res) => {
+app.get('/', (req : any, res : any) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
@@ -53,7 +53,6 @@ interface ApplicationData {
   email: string;
   phone_number: string;
   year: number;
-  essay_questions: string[];
   urls: string[];
 }
 
@@ -63,7 +62,7 @@ interface UpdateData {
 }
 
 // API endpoint for handling POST requests
-app.post('/apply', async (req, res) => {
+app.post('/apply', async (req : any, res : any) => {
 
   const { 
     first_name, 
@@ -71,12 +70,11 @@ app.post('/apply', async (req, res) => {
     email, 
     phone_number, 
     year, 
-    essay_questions, 
     urls 
   }: ApplicationData = req.body;
   
   // Validate request body
-  if (!first_name || !last_name || !email || !phone_number || !year || !essay_questions || !urls) {
+  if (!first_name || !last_name || !email || !phone_number || !year || !urls) {
     return res.status(400).json({ error: 'Invalid request. All fields are required.', errorType: 'INVALID_REQUEST'});
   }
 
@@ -88,7 +86,6 @@ app.post('/apply', async (req, res) => {
       email,
       phone_number,
       year,
-      essay_questions,
       urls,
       timestamp: new Date()
     });
@@ -102,7 +99,7 @@ app.post('/apply', async (req, res) => {
   }
 });
 
-app.put('/apply', async (req, res) => {
+app.put('/apply', async (req : any, res : any) => {
   const { 
     applicationId,
     applicationData
@@ -121,7 +118,6 @@ app.put('/apply', async (req, res) => {
       email: applicationData.email,
       phone_number: applicationData.phone_number,
       year: applicationData.year,
-      essay_questions: applicationData.essay_questions,
       urls: applicationData.urls,
       timestamp: new Date()
     }, { merge: true });
@@ -134,7 +130,7 @@ app.put('/apply', async (req, res) => {
   }
 })
 
-app.delete('/apply', async (req, res) => {
+app.delete('/apply', async (req : any, res : any) => {
   const { email } = req.body;
 
   // Validate request body
