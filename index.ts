@@ -53,6 +53,7 @@ interface ApplicationData {
   email: string;
   phone_number: string;
   year: number;
+  why_do_you_want_to_join: string;
   urls: string[];
 }
 
@@ -70,28 +71,29 @@ app.post('/apply', async (req : any, res : any) => {
     email, 
     phone_number, 
     year, 
+    why_do_you_want_to_join,
     urls 
   }: ApplicationData = req.body;
   
   // Validate request body
-  if (!first_name || !last_name || !email || !phone_number || !year || !urls) {
+  if (!first_name || !last_name || !email || !phone_number || !year || why_do_you_want_to_join || !urls) {
     return res.status(400).json({ error: 'Invalid request. All fields are required.', errorType: 'INVALID_REQUEST'});
   }
 
   // Add the data to the database
   try {
-    const docRef = await db.collection('applications').doc(email).set({
+    const docRef = await db.collection('applications').add({
       first_name,
       last_name,
       email,
       phone_number,
       year,
       urls,
+      why_do_you_want_to_join,
       timestamp: new Date()
     });
-
-
-    return res.status(200).json({ message: 'Application submitted successfully'});
+    console.log(docRef)
+    return res.status(200).json({ message: 'Application submitted successfully', "applicationId": docRef.id });
   } 
   catch (error) {
     console.error('Error submitting application:', error);
@@ -99,7 +101,7 @@ app.post('/apply', async (req : any, res : any) => {
   }
 });
 
-app.put('/apply', async (req : any, res : any) => {
+app.patch('/apply', async (req : any, res : any) => {
   const { 
     applicationId,
     applicationData
@@ -112,7 +114,7 @@ app.put('/apply', async (req : any, res : any) => {
 
   // Add the data to the database
   try {
-    await db.collection('applications').doc(applicationData.email).set({
+    await db.collection('applications').doc(applicationId).set({
       first_name: applicationData.first_name,
       last_name: applicationData.last_name,
       email: applicationData.email,
@@ -122,7 +124,7 @@ app.put('/apply', async (req : any, res : any) => {
       timestamp: new Date()
     }, { merge: true });
 
-    return res.status(200).json({ message: 'Application updated successfully'});
+    return res.status(200).json({ message: 'Application updated successfully', "applicationId": applicationId });
   } 
   catch (error) {
     console.error('Error updating application:', error);
@@ -131,18 +133,18 @@ app.put('/apply', async (req : any, res : any) => {
 })
 
 app.delete('/apply', async (req : any, res : any) => {
-  const { email } = req.body;
+  const { applicationId } = req.body;
 
   // Validate request body
-  if (!email) {
+  if (!applicationId) {
     return res.status(400).json({ error: 'Invalid request. All fields are required.', errorType: 'INVALID_REQUEST'});
   }
 
   // Add the data to the database
   try {
-    await db.collection('applications').doc(email).delete();
+    await db.collection('applications').doc(applicationId).delete();
 
-    return res.status(200).json({ message: 'Application deleted successfully', email: email});
+    return res.status(200).json({ message: 'Application deleted successfully'});
   } 
   catch (error) {
     console.error('Error deleting application:', error);
