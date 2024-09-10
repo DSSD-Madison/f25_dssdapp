@@ -21,7 +21,7 @@
         ul {
             padding-left: 20px;
         }
-        .apply-button {
+        .apply-button, .resource-button {
             display: inline-block;
             background-color: #c5050c;
             color: white;
@@ -31,7 +31,7 @@
             margin-top: 20px;
             transition: background-color 0.3s ease;
         }
-        .apply-button:hover {
+        .apply-button:hover, .resource-button:hover {
             background-color: #9b0000;
         }
         .api-info, .error-codes {
@@ -88,22 +88,23 @@
         <li>Create solutions to real-life problems</li>
         <li>Apply data and computer science to real-world problems in sustainability and more</li>
     </ul>
-    <h3 class='apply-code'><code>Apply Today by Sending a POST request to the endpoint /apply</code></h3>
+    <h3 class='apply-code'><code>Apply Today by Sending a POST request to the endpoint https://oa-madison-2024.onrender.com/apply</code></h3>
     <a href="https://madison.dssdglobal.org/" target='_blank' class="apply-button">Learn More & Visit Our Main Website</a>
+    <a href="https://www.freecodecamp.org/news/http-request-methods-explained/" target='_blank' class="resource-button">Learn About POST Requests</a>
     <div class="api-info">
         <h2>API Information</h2>
-        <h3>POST /apply</h3>
+        <h3>POST https://oa-madison-2024.onrender.com/apply</h3>
         <p>
-            To submit a new application, send a POST request to the /apply endpoint with the following JSON structure:
+            To submit a new application, send a POST request to the https://oa-madison-2024.onrender.com/apply endpoint with the following JSON structure:
         </p>
         <pre><code>{
   <span class="json-key">"first_name"</span>: <span class="json-string">"String"</span>,
   <span class="json-key">"last_name"</span>: <span class="json-string">"String"</span>,
   <span class="json-key">"email"</span>: <span class="json-string">"String"</span>,
   <span class="json-key">"phone_number"</span>: <span class="json-string">"String"</span>,
-  <span class="json-key">"year"</span>: <span class="json-number">Number</span>,
+  <span class="json-key">"year"</span>: <span class="json-number">Number</span>, <span class="json-comment">// Expected graduation year</span>
   <span class="json-key">"why_do_you_want_to_join"</span>: <span class="json-string">"String"</span>,
-  <span class="json-key">"urls"</span>: [<span class="json-string">"String"</span>]
+  <span class="json-key">"urls"</span>: [<span class="json-string">"String"</span>] <span class="json-comment">// Include "https://"</span>
 }</code></pre>
         <p>
             The API will return a JSON response with the following structure:
@@ -112,9 +113,9 @@
   <span class="json-key">"message"</span>: <span class="json-string">"Application submitted successfully"</span>,
   <span class="json-key">"applicationId"</span>: <span class="json-string">"YOUR_APPLICATION_ID"</span>
 }</code></pre>
-        <h3>PATCH /apply</h3>
+        <h3>PATCH https://oa-madison-2024.onrender.com/apply</h3>
         <p>
-            To update an existing application, send a PATCH request to the /apply endpoint with the following JSON structure:
+            To update an existing application, send a PATCH request to the https://oa-madison-2024.onrender.com/apply endpoint with the following JSON structure:
         </p>
         <pre><code>{
   <span class="json-key">"applicationId"</span>: <span class="json-string">"String"</span>,
@@ -123,7 +124,7 @@
     <span class="json-key">"last_name"</span>: <span class="json-string">"String"</span>,
     <span class="json-key">"email"</span>: <span class="json-string">"String"</span>,
     <span class="json-key">"phone_number"</span>: <span class="json-string">"String"</span>,
-    <span class="json-key">"year"</span>: <span class="json-number">Number</span>,
+    <span class="json-key">"year"</span>: <span class="json-number">Number</span>, <span class="json-comment">// Expected graduation year</span>
     <span class="json-key">"why_do_you_want_to_join"</span>: <span class="json-string">"String"</span>,
     <span class="json-key">"urls"</span>: [<span class="json-string">"String"</span>]
   }
@@ -136,9 +137,9 @@
   <span class="json-key">"applicationId"</span>: <span class="json-string">"YOUR_APPLICATION_ID"</span>
 }</code></pre>
 
-        <h3>DELETE /apply</h3>
+        <h3>DELETE https://oa-madison-2024.onrender.com/apply</h3>
         <p>
-            To delete an existing application, send a DELETE request to the /apply endpoint with the following JSON structure:
+            To delete an existing application, send a DELETE request to the https://oa-madison-2024.onrender.com/apply endpoint with the following JSON structure:
         </p>
         <pre><code>{
   <span class="json-key">"applicationId"</span>: <span class="json-string">"String"</span>
@@ -157,7 +158,7 @@
         <div class="error-code">
             <h3>INVALID_REQUEST (400)</h3>
             <p>This error occurs when the request is missing required fields or contains invalid data.</p>
-            <p><strong>What to do:</strong> Double-check your request body to ensure all required fields are present and correctly formatted. Refer to the API Information section above for the correct structure.</p>
+            <p><strong>What to do:</strong> Check the error message for specific details about which field is missing or incorrectly formatted. Ensure all required fields are present and correctly formatted according to the API Information section above.</p>
         </div>
         
         <div class="error-code">
