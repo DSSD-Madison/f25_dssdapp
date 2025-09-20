@@ -20,13 +20,16 @@ console.log(`Starting API in ${isDevelopment ? 'development' : 'production'} mod
 // Initialize Firebase Admin SDK
 let firebaseApp;
 try {
-  const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH || './certs/oa-madison-firebase-adminsdk-tr5iw-80ae5b92fb.json';
-    
-  firebaseApp = initializeApp({
-    credential: cert(serviceAccountPath),
-  }); 
-
-  console.log('Firebase Admin SDK initialized successfully');
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    firebaseApp = initializeApp({
+      credential: cert(serviceAccount),
+    });
+    console.log('Firebase Admin SDK initialized successfully');
+  } else {
+    console.error('FIREBASE_SERVICE_ACCOUNT environment variable not found');
+    process.exit(1);
+  }
 } catch (error) {
   console.error('Error initializing Firebase Admin SDK:', error);
   process.exit(1);
