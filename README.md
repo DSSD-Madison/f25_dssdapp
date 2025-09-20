@@ -1,174 +1,136 @@
-# UW Madison Data Science for Sustainable Development Application API
+# API Documentation
 
 ## Overview
 
-This API serves as the backend for the application process to the UW Madison Data Science for Sustainable Development program. It provides endpoints for submitting, updating, and deleting applications.
+This API allows users to apply for the **Data Science for Sustainable Development (DSSD)** program at UW Madison. It handles application submissions, email notifications, and application deletion requests.
 
-## Table of Contents
+## Endpoints
 
-1. [Prerequisites](#prerequisites)
-2. [Installation](#installation)
-3. [Configuration](#configuration)
-4. [Running the Application](#running-the-application)
-5. [API Endpoints](#api-endpoints)
-6. [Rate Limiting](#rate-limiting)
-7. [Error Handling](#error-handling)
-8. [Development vs Production](#development-vs-production)
-9. [Contributing](#contributing)
-10. [License](#license)
+### 1. **`GET /health`**
 
-## Prerequisites
+**Description**: A simple health check to ensure the API is running.
+**Response**:
 
-- Node.js (v14 or later recommended)
-- npm (comes with Node.js)
-- Firebase account and project
-- Firebase Admin SDK credentials
-
-## Installation
-
-1. Clone the repository:
-   ```
-   git clone [your-repo-url]
-   cd [your-repo-name]
-   ```
-
-2. Install dependencies:
-   ```
-   npm install
-   ```
-
-## Configuration
-
-1. Create a `.env` file in the root directory with the following contents:
-   ```
-   PORT=8080
-   NODE_ENV=development
-   ```
-
-2. Place your Firebase Admin SDK credentials file in the appropriate location:
-   - For development: `./certs/oa-madison-firebase-adminsdk-tr5iw-80ae5b92fb.json`
-   - For production: `/etc/secrets/oa-madison-firebase-adminsdk-tr5iw-80ae5b92fb.json`
-
-## Running the Application
-
-To start the server:
-
-```
-npm start
-```
-
-For development with auto-restart on file changes:
-
-```
-npm run dev
-```
-
-## API Endpoints
-
-### POST /apply
-
-Submit a new application.
-
-Request body:
 ```json
 {
-  "first_name": "String",
-  "last_name": "String",
-  "email": "String",
-  "phone_number": "String",
-  "year": Number,
-  "essay_questions": ["String"],
-  "urls": ["String"]
+  "status": "healthy",
+  "timestamp": "2025-09-20T12:00:00.000Z",
+  "environment": "production",
+  "emailEnabled": true
 }
 ```
 
-Response:
+### 2. **`GET /`**
+
+**Description**: Serves the `index.html` file located in the `public` directory.
+**Response**: A static HTML page.
+
+### 3. **`POST /apply`**
+
+**Description**: Submits a new application to the program.
+**Request Body** (JSON):
+
 ```json
 {
-  "message": "Application submitted successfully"
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "johndoe@example.com",
+  "year": 2025
 }
 ```
 
-### PUT /apply
+**Response**:
 
-Update an existing application.
+* **Success** (201):
 
-Request body:
-```json
-{
-  "email": "YOUR_EMAIL",
-  "applicationData": {
-    "first_name": "String",
-    "last_name": "String",
-    "email": "String",
-    "phone_number": "String",
-    "year": Number,
-    "essay_questions": ["String"],
-    "urls": ["String"]
+  ```json
+  {
+    "message": "Application submitted successfully",
+    "applicationId": "app_1234567890",
+    "email_sent": "Confirmation email sent to johndoe@example.com"
   }
-}
+  ```
+* **Error** (400/500):
+
+  ```json
+  {
+    "error": "Invalid request data",
+    "details": ["email is required", "year must be between 2025 and 2030"],
+    "errorType": "INVALID_REQUEST"
+  }
+  ```
+
+### 4. **`DELETE /apply`**
+
+**Description**: Deletes an existing application using the `applicationId`.
+**Query Parameters**:
+
+* `applicationId` (e.g., `app_1234567890`)
+
+**Response**:
+
+* **Success** (200):
+
+  ```json
+  {
+    "message": "Application deleted successfully",
+    "applicationId": "app_1234567890",
+    "email_sent": "Confirmation email sent to johndoe@example.com"
+  }
+  ```
+* **Error** (400/404/500):
+
+  ```json
+  {
+    "error": "Invalid or missing application ID",
+    "errorType": "INVALID_APPLICATION_ID"
+  }
+  ```
+
+## Process
+
+1. **Application Submission (`/apply`)**:
+
+   * Users send their first name, last name, email, and desired year.
+   * The API validates the input using **Yup** and stores the application in **Firestore**.
+   * If the application is successfully submitted, a confirmation email is sent to the user, including their application details.
+
+2. **Application Deletion (`/apply`)**:
+
+   * Users can delete their application by providing the `applicationId`.
+   * Upon successful deletion, a confirmation email is sent, and the application is removed from Firestore.
+
+3. **Rate Limiting**:
+
+   * The `POST /apply` endpoint is rate-limited to 10 requests per IP within 5 minutes to prevent abuse.
+
+4. **Email Notifications**:
+
+   * After application submission, a **welcome email** is sent with application details.
+   * After application deletion, a **deletion confirmation email** is sent.
+
+## Dependencies
+
+* **Express**: Web framework for routing.
+* **Firebase Admin SDK**: To interact with Firestore for data storage.
+* **Nodemailer**: For sending email notifications.
+* **Yup**: For validating incoming application data.
+* **dotenv**: For managing environment variables.
+
+## Environment Variables
+
+Ensure the following environment variables are set in your `.env` file:
+
+```env
+NODE_ENV=development
+PORT=8080
+FIREBASE_SERVICE_ACCOUNT_PATH=./path/to/firebase-service-account.json
+GMAIL_USER=your-email@gmail.com
+GMAIL_APP_PASSWORD=your-app-password
 ```
 
-Response:
-```json
-{
-  "message": "Application updated successfully"
-}
-```
+## Notes
 
-### DELETE /apply
+* Ensure Firebase Firestore is properly configured and accessible via the provided service account.
+* If the email service is not configured correctly, email-related features (welcome and deletion emails) will be skipped.
 
-Delete an existing application.
-
-Request body:
-```json
-{
-  "email": "YOUR_EMAIL"
-}
-```
-
-Response:
-```json
-{
-  "message": "Application deleted successfully"
-}
-```
-
-## Rate Limiting
-
-The API implements rate limiting to prevent abuse. Each IP is limited to 100 requests per 15-minute window. If you exceed the rate limit, wait for at least 15 minutes before trying to submit your application again.
-
-## Error Handling
-
-The API returns appropriate HTTP status codes and error messages:
-
-- INVALID_REQUEST (400): Missing required fields or invalid data
-- DATABASE_ERROR (500): Problem with the database while processing the application
-- RATE_LIMIT_EXCEEDED (429): Too many requests in a short period of time
-
-## Development vs Production
-
-The application detects the environment based on the `NODE_ENV` variable:
-
-- `development`: Uses local credentials file and enables additional logging.
-- `production`: Uses credentials file from `/etc/secrets/` and optimizes for performance.
-
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
-## Program Benefits
-
-As a student in our program, you will have the opportunity to:
-
-- Engage in hands-on projects and research collaborations with industry partners
-- Develop high-value skills in software development
-- Build a network of highly motivated, passionate, and intelligent peers
-- Create solutions to real-life problems
-- Apply data and computer science to real-world problems in sustainability and more
-
-For more information about the program and to visit the main website, go to [https://madison.dssdglobal.org/](https://madison.dssdglobal.org/).

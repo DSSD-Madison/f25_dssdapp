@@ -1,5 +1,5 @@
 {
-  "name": "hiro-backend",
+  "name": "oa-dssd-2025",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -19,8 +19,12 @@
     "express": "^4.18.2",
     "express-rate-limit": "^7.3.1",
     "firebase-admin": "^12.0.0",
+    "nodemailer": "^7.0.6",
     "nodemon": "^3.0.2",
     "typescript": "^5.3.3",
     "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^7.0.1"
   }
 }

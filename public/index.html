@@ -3,175 +3,852 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apply into UW Madison Data Science for Sustainable Development</title>
+    <title>Application API Documentation - Data Science for Sustainable Development</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        h1, h2 {
-            color: #c5050c;
-            border-bottom: 2px solid #c5050c;
-            padding-bottom: 10px;
-        }
-        ul {
-            padding-left: 20px;
-        }
-        .apply-button, .resource-button {
-            display: inline-block;
-            background-color: #c5050c;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            margin-top: 20px;
-            transition: background-color 0.3s ease;
-        }
-        .apply-button:hover, .resource-button:hover {
-            background-color: #9b0000;
-        }
-        .api-info, .error-codes {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 15px;
-            margin-top: 20px;
-        }
-        .error-code {
-            margin-bottom: 15px;
-        }
-        .error-code h3 {
-            color: #c5050c;
-            margin-bottom: 5px;
-        }
-        pre {
-            background-color: #272822;
-            color: #f8f8f2;
-            border-radius: 4px;
-            padding: 15px;
-            overflow-x: auto;
-            font-family: 'Courier New', Courier, monospace;
-        }
-        .json-key {
-            color: #2488db;
-        }
-        .json-string {
-            color: #2ea043;
-        }
-        .json-number {
-            color: #B267E6;
-        }
-        .apply-code{
-            font-size: 1.5em;
+        * {
             margin: 0;
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #24292e;
+            background: #fafbfc;
+        }
+
+        .header {
+            background: #ffffff;
+            border-bottom: 1px solid #e1e4e8;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 100%;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #24292e;
+        }
+
+        .logo .version {
+            background: #f1f8ff;
+            color: #0366d6;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #586069;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #0366d6;
+        }
+
+        .primary-btn {
+            background: #c5050c;
+            color: white !important;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .primary-btn:hover {
+            background: #a00408;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 280px;
+            height: calc(100vh - 80px);
+            background: #ffffff;
+            border-right: 1px solid #e1e4e8;
+            overflow-y: auto;
+            padding: 2rem 0;
+        }
+
+        .sidebar-nav {
+            padding: 0 1.5rem;
+        }
+
+        .sidebar-nav h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #586069;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            color: #24292e;
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: block;
+            padding: 0.375rem 0;
+            transition: color 0.2s;
+        }
+
+        .sidebar-nav a:hover {
+            color: #0366d6;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem 2rem 4rem;
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #24292e;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            font-size: 1.125rem;
+            color: #586069;
+            max-width: 600px;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #24292e;
+            margin-bottom: 1rem;
+            scroll-margin-top: 80px;
+        }
+
+        .section h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #24292e;
+            margin: 2rem 0 1rem;
+        }
+
+        .section h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #24292e;
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .section ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .endpoint-card {
+            background: #ffffff;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .endpoint-header {
+            background: #f6f8fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e1e4e8;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .method-badge {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
             border-radius: 4px;
-            padding: 15px;
-            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .method-post { background: #dcffe4; color: #28a745; }
+        .method-delete { background: #ffdce0; color: #d73a49; }
+        .method-get { background: #e1f5fe; color: #0277bd; }
+
+        .endpoint-path {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.875rem;
+            background: #f6f8fa;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            color: #24292e;
+        }
+
+        .endpoint-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #24292e;
+        }
+
+        .endpoint-content {
+            padding: 1.5rem;
+        }
+
+        .code-block {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+        }
+
+        .code-block.json {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+
+        .response-example {
+            background: #f1f8ff;
+            border: 1px solid #c8e1ff;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .response-example h5 {
+            color: #0366d6;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .json-key { color: #79b8ff; }
+        .json-string { color: #85e89d; }
+        .json-number { color: #b392f0; }
+        .json-comment { color: #6a737d; font-style: italic; }
+
+        .info-box {
+            background: #f1f8ff;
+            border-left: 4px solid #0366d6;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .info-box ul {
+            margin-left: 1rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0;
+        }
+
+        .warning-box {
+            background: #fff8c5;
+            border-left: 4px solid #ffd33d;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .error-box {
+            background: #ffeef0;
+            border-left: 4px solid #d73a49;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .error-code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            background: #f6f8fa;
+            padding: 0.125rem 0.375rem;
+            border-radius: 3px;
+            font-size: 0.875rem;
+            color: #d73a49;
+        }
+
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.875rem;
+        }
+
+        .parameter-table th,
+        .parameter-table td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .parameter-table th {
+            background: #f6f8fa;
+            font-weight: 600;
+            color: #24292e;
+        }
+
+        .parameter-table code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            background: #f6f8fa;
+            padding: 0.125rem 0.375rem;
+            border-radius: 3px;
+            font-size: 0.8125rem;
+        }
+
+        .quick-start {
+            background: #ffffff;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .quick-start h3 {
+            color: #24292e;
+            margin-bottom: 1rem;
+        }
+
+        .step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            background: #c5050c;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container,
+            .main-content {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .header-content {
+                padding: 0 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Apply Into UW Madison Data Science for Sustainable Development</h1>
-    <p>
-        As a student in our program, you will have the opportunity to:
-    </p>
-    <ul>
-        <li>Engage in hands-on projects and research collaborations with industry partners</li>
-        <li>Develop high-value skills in software development</li>
-        <li>Build a network of highly motivated, passionate, and intelligent peers</li>
-        <li>Create solutions to real-life problems</li>
-        <li>Apply data and computer science to real-world problems in sustainability and more</li>
-    </ul>
-    <h3 class='apply-code'><code>Apply Today by Sending a POST request to the endpoint https://oa-madison-2024.onrender.com/apply</code></h3>
-    <a href="https://madison.dssdglobal.org/" target='_blank' class="apply-button">Learn More & Visit Our Main Website</a>
-    <a href="https://www.freecodecamp.org/news/http-request-methods-explained/" target='_blank' class="resource-button">Learn About POST Requests</a>
-    <div class="api-info">
-        <h2>API Information</h2>
-        <h3>POST https://oa-madison-2024.onrender.com/apply</h3>
-        <p>
-            To submit a new application, send a POST request to the https://oa-madison-2024.onrender.com/apply endpoint with the following JSON structure:
-        </p>
-        <pre><code>{
-  <span class="json-key">"first_name"</span>: <span class="json-string">"String"</span>,
-  <span class="json-key">"last_name"</span>: <span class="json-string">"String"</span>,
-  <span class="json-key">"email"</span>: <span class="json-string">"String"</span>,
-  <span class="json-key">"phone_number"</span>: <span class="json-string">"String"</span>,
-  <span class="json-key">"year"</span>: <span class="json-number">Number</span>, <span class="json-comment">// Expected graduation year</span>
-  <span class="json-key">"why_do_you_want_to_join"</span>: <span class="json-string">"String"</span>,
-  <span class="json-key">"urls"</span>: [<span class="json-string">"String"</span>] <span class="json-comment">// Include "https://"</span>
-}</code></pre>
-        <p>
-            The API will return a JSON response with the following structure:
-        </p>
-        <pre><code>{
-  <span class="json-key">"message"</span>: <span class="json-string">"Application submitted successfully"</span>,
-  <span class="json-key">"applicationId"</span>: <span class="json-string">"YOUR_APPLICATION_ID"</span>
-}</code></pre>
-        <h3>PATCH https://oa-madison-2024.onrender.com/apply</h3>
-        <p>
-            To update an existing application, send a PATCH request to the https://oa-madison-2024.onrender.com/apply endpoint with the following JSON structure:
-        </p>
-        <pre><code>{
-  <span class="json-key">"applicationId"</span>: <span class="json-string">"String"</span>,
-  <span class="json-key">"applicationData"</span>: {
-    <span class="json-key">"first_name"</span>: <span class="json-string">"String"</span>,
-    <span class="json-key">"last_name"</span>: <span class="json-string">"String"</span>,
-    <span class="json-key">"email"</span>: <span class="json-string">"String"</span>,
-    <span class="json-key">"phone_number"</span>: <span class="json-string">"String"</span>,
-    <span class="json-key">"year"</span>: <span class="json-number">Number</span>, <span class="json-comment">// Expected graduation year</span>
-    <span class="json-key">"why_do_you_want_to_join"</span>: <span class="json-string">"String"</span>,
-    <span class="json-key">"urls"</span>: [<span class="json-string">"String"</span>]
-  }
-}</code></pre>
-        <p>
-            The API will return a JSON response with the following structure:
-        </p>
-        <pre><code>{
-  <span class="json-key">"message"</span>: <span class="json-string">"Application updated successfully"</span>,
-  <span class="json-key">"applicationId"</span>: <span class="json-string">"YOUR_APPLICATION_ID"</span>
-}</code></pre>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>DSSD Application API (2025)</h1>
+                <span class="version">v1.0</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#overview">Overview</a>
+                <a href="#authentication">Security</a>
+                <a href="#endpoints">Endpoints</a>
+                <a href="#errors">Errors</a>
+                <a href="https://madison.dssdglobal.org/" target="_blank" class="primary-btn">Apply Now</a>
+            </nav>
+        </div>
+    </header>
 
-        <h3>DELETE https://oa-madison-2024.onrender.com/apply</h3>
-        <p>
-            To delete an existing application, send a DELETE request to the https://oa-madison-2024.onrender.com/apply endpoint with the following JSON structure:
-        </p>
-        <pre><code>{
-  <span class="json-key">"applicationId"</span>: <span class="json-string">"String"</span>
-}</code></pre>
-        <p>
-            The API will return a JSON response with the following structure:
-        </p>
-        <pre><code>{
-  <span class="json-key">"message"</span>: <span class="json-string">"Application deleted successfully"</span>
-}</code></pre>
-    </div>
-    <div class="error-codes">
-        <h2>Error Codes and Troubleshooting</h2>
-        <p>If you encounter an error while using our API, please refer to the following error codes and instructions:</p>
-        
-        <div class="error-code">
-            <h3>INVALID_REQUEST (400)</h3>
-            <p>This error occurs when the request is missing required fields or contains invalid data.</p>
-            <p><strong>What to do:</strong> Check the error message for specific details about which field is missing or incorrectly formatted. Ensure all required fields are present and correctly formatted according to the API Information section above.</p>
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <h3>Getting Started</h3>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#quick-start">Quick Start</a></li>
+                <li><a href="#authentication">Security Model</a></li>
+            </ul>
+
+            <h3>API Reference</h3>
+            <ul>
+                <li><a href="#health-check">Health Check</a></li>
+                <li><a href="#submit-application">Submit Application</a></li>
+                <li><a href="#delete-application">Delete Application</a></li>
+            </ul>
+
+            <h3>Support</h3>
+            <ul>
+                <li><a href="#error-handling">Error Handling</a></li>
+                <li><a href="#rate-limiting">Rate Limiting</a></li>
+                <li><a href="#support">Contact Support</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Application API Documentation</h1>
+            <p>Secure API reference for the UW Madison Data Science for Sustainable Development program application system.</p>
         </div>
-        
-        <div class="error-code">
-            <h3>DATABASE_ERROR (500)</h3>
-            <p>This error indicates a problem with our database while processing your application.</p>
-            <p><strong>What to do:</strong> Please try submitting your application again after a few minutes. If the problem persists, contact our support team.</p>
-        </div>
-        
-        <div class="error-code">
-            <h3>RATE_LIMIT_EXCEEDED</h3>
-            <p>You've sent too many requests in a short period of time.</p>
-            <p><strong>What to do:</strong> Wait for at least 15 minutes before trying to submit your application again. If you need to submit multiple applications, please space out your requests.</p>
-        </div>
-    </div>
+
+        <section id="overview" class="section">
+            <h2>Overview</h2>
+            <p>The DSSD Application API provides secure, email-based access to submit and manage applications for Data Science for Sustainable Development.</p>
+            
+            <div class="info-box">
+                <strong>Base URL:</strong> <code>http://localhost:8080</code> (development) or your deployed URL
+            </div>
+
+            <h3>General Club Information</h3>
+            <p>The Data Science for Sustainable Development program offers students the opportunity to:</p>
+            <ul>
+                <li>Engage in industry partnerships and collaborative research projects</li>
+                <li>Develop advanced technical skills in software development</li>
+                <li>Build professional networks with peers and industry leaders</li>
+                <li>Work and learn on projects that really matter and make a difference</li>
+            </ul>
+                
+            <div class="info-box">
+                <strong>Ready to apply?</strong> Keep reading this documentation to tell you how. For any questions on how we recruit click <a href = "https://docs.google.com/document/d/1PlrcmK62e-TASXnHERqlugYdU4CzLLkxe3itrBO6AZ4/" target = "_blank" style="color: #0366d6;">here</a>! Visit our <a href="https://madison.dssdglobal.org/" target="_blank" style="color: #0366d6;">main website</a> to learn more about the program and submit your application through our online portal.
+            </div>
+        </section>
+
+        <section id="quick-start" class="section">
+            <div class="quick-start">
+                <h3>Quick Start Guide</h3>
+                
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <strong>Prepare your application data</strong>
+                        <p>Gather required information: first name, last name, email address, and expected graduation year (2025-2030).</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <strong>Submit your application</strong>
+                        <p>Send a POST request to <code>/apply</code> with your application data in JSON format.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <strong>Check your email for confirmation</strong>
+                        <p>You'll receive an email with your application ID (format: <code>app_xxxxx</code>) for future reference.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div>
+                        <strong>Save your application ID</strong>
+                        <p>Store the application ID from your email to manage your application later.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="authentication" class="section">
+            <h2>Security Model</h2>
+            <p>The API uses a simplified security model based on application IDs to ensure data integrity while maintaining ease of use.</p>
+            
+            <h3>Key Security Features</h3>
+            <ul>
+                <li><strong>Unique Email Constraint:</strong> Only one application per email address is allowed</li>
+                <li><strong>Email Confirmation:</strong> All operations send confirmation emails to the registered address</li>
+                <li><strong>Simple Deletion:</strong> Applications can be deleted using only the application ID</li>
+                <li><strong>No Authentication Required:</strong> Public endpoints for both submission and deletion</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>Rate Limiting:</strong> To prevent abuse, we enforce a rate limit of 10 requests per 5-minute window per IP address on the <code>/apply</code> endpoint.
+            </div>
+
+            <div class="info-box">
+                <strong>Duplicate Email Protection:</strong> If you try to submit an application with an email that already exists, you'll receive an <code>EMAIL_ALREADY_EXISTS</code> error instead of overwriting the existing application.
+            </div>
+        </section>
+
+        <section id="endpoints" class="section">
+            <h2>API Endpoints</h2>
+
+            <div id="health-check" class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-path">/health</span>
+                    <span class="endpoint-title">Health Check</span>
+                </div>
+                <div class="endpoint-content">
+                    <p>Check if the API server is running and healthy. No parameters required.</p>
+
+                    <h4>Example Request</h4>
+                    <div class="code-block">GET /health</div>
+
+                    <div class="response-example">
+                        <h5>Success Response (200 OK)</h5>
+                        <div class="code-block json">{
+  <span class="json-key">"status"</span>: <span class="json-string">"healthy"</span>,
+  <span class="json-key">"timestamp"</span>: <span class="json-string">"2025-09-20T15:30:45.123Z"</span>,
+  <span class="json-key">"environment"</span>: <span class="json-string">"development"</span>
+}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="submit-application" class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-post">POST</span>
+                    <span class="endpoint-path">/apply</span>
+                    <span class="endpoint-title">Submit New Application</span>
+                </div>
+                <div class="endpoint-content">
+                    <p>Creates a new application for the DSSD program. Each email address can only have one application. This endpoint is rate limited to 10 requests per 5-minute window.</p>
+
+                    <h4>Request Body</h4>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>firstName</code></td>
+                                <td>String</td>
+                                <td>Yes</td>
+                                <td>Applicant's first name</td>
+                            </tr>
+                            <tr>
+                                <td><code>lastName</code></td>
+                                <td>String</td>
+                                <td>Yes</td>
+                                <td>Applicant's last name</td>
+                            </tr>
+                            <tr>
+                                <td><code>email</code></td>
+                                <td>String</td>
+                                <td>Yes</td>
+                                <td>Valid email address (must be unique)</td>
+                            </tr>
+                            <tr>
+                                <td><code>year</code></td>
+                                <td>Number</td>
+                                <td>Yes</td>
+                                <td>Expected graduation year (2025-2030)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Example Request</h4>
+                    <div class="code-block json">{
+  <span class="json-key">"firstName"</span>: <span class="json-string">"Jane"</span>,
+  <span class="json-key">"lastName"</span>: <span class="json-string">"Smith"</span>,
+  <span class="json-key">"email"</span>: <span class="json-string">"jane.smith@wisc.edu"</span>,
+  <span class="json-key">"year"</span>: <span class="json-number">2026</span>
+}</div>
+
+                    <div class="response-example">
+                        <h5>Success Response (201 Created)</h5>
+                        <div class="code-block json">{
+  <span class="json-key">"message"</span>: <span class="json-string">"Application submitted successfully"</span>,
+  <span class="json-key">"applicationId"</span>: <span class="json-string">"app_1234567890abcdef"</span>,
+  <span class="json-key">"email_sent"</span>: <span class="json-string">"Confirmation email sent to jane.smith@wisc.edu"</span>
+}</div>
+                    </div>
+
+                    <div class="response-example">
+                        <h5>Duplicate Email Error (400 Bad Request)</h5>
+                        <div class="code-block json">{
+  <span class="json-key">"error"</span>: <span class="json-string">"An application with this email already exists."</span>,
+  <span class="json-key">"errorType"</span>: <span class="json-string">"EMAIL_ALREADY_EXISTS"</span>
+}</div>
+                    </div>
+
+                    <div class="response-example">
+                        <h5>Validation Error (400 Bad Request)</h5>
+                        <div class="code-block json">{
+  <span class="json-key">"error"</span>: <span class="json-string">"Invalid request data"</span>,
+  <span class="json-key">"details"</span>: [
+    <span class="json-string">"firstName is a required field"</span>,
+    <span class="json-string">"email must be a valid email"</span>
+  ],
+  <span class="json-key">"errorType"</span>: <span class="json-string">"INVALID_REQUEST"</span>
+}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="delete-application" class="endpoint-card">
+                <div class="endpoint-header">
+                    <span class="method-badge method-delete">DELETE</span>
+                    <span class="endpoint-path">/apply?id=app_xxxxx</span>
+                    <span class="endpoint-title">Delete Application</span>
+                </div>
+                <div class="endpoint-content">
+                    <p>Permanently deletes an application from the system using the application ID provided in the confirmation email.</p>
+
+                    <h4>Query Parameters</h4>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>id</code></td>
+                                <td>String</td>
+                                <td>Yes</td>
+                                <td>Unique application identifier (format: <code>app_xxxxx</code>)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="info-box">
+                        <strong>Note:</strong> The application ID is sent to your email address when you submit your application. It follows the format <code>app_</code> followed by a unique identifier.
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>Warning:</strong> This action cannot be undone. The application will be permanently removed from our system.
+                    </div>
+
+                    <h4>Example Request</h4>
+                    <div class="code-block">DELETE /apply?id=app_1234567890abcdef</div>
+
+                    <div class="response-example">
+                        <h5>Success Response (200 OK)</h5>
+                        <div class="code-block json">{
+  <span class="json-key">"message"</span>: <span class="json-string">"Application deleted successfully"</span>,
+  <span class="json-key">"applicationId"</span>: <span class="json-string">"app_1234567890abcdef"</span>,
+  <span class="json-key">"email_sent"</span>: <span class="json-string">"Confirmation email sent to applicant@email.com"</span>
+}</div>
+                    </div>
+
+                    <div class="response-example">
+                        <h5>Invalid ID Error (400 Bad Request)</h5>
+                        <div class="code-block json">{
+  <span class="json-key">"error"</span>: <span class="json-string">"Invalid or missing application ID"</span>,
+  <span class="json-key">"errorType"</span>: <span class="json-string">"INVALID_APPLICATION_ID"</span>
+}</div>
+                    </div>
+
+                    <div class="response-example">
+                        <h5>Application Not Found Error (404 Not Found)</h5>
+                        <div class="code-block json">{
+  <span class="json-key">"error"</span>: <span class="json-string">"Application not found"</span>,
+  <span class="json-key">"errorType"</span>: <span class="json-string">"APPLICATION_NOT_FOUND"</span>
+}</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="notifications" class="section">
+            <h2>Email Notifications</h2>
+            <p>All successful API operations automatically trigger email notifications to the applicant's registered email address.</p>
+            
+            <div class="info-box">
+                <strong>Note:</strong> Currently, email functionality is integrated but may require additional setup with Resend or another email provider.
+            </div>
+
+            <h3>Application Submission Email</h3>
+            <p>When you submit an application, you'll receive an email containing:</p>
+            <ul>
+                <li>Confirmation of successful submission</li>
+                <li>Your complete application details</li>
+                <li>Your unique application ID (format: <code>app_xxxxx</code>)</li>
+                <li>Instructions on how to delete your application if needed</li>
+                <li>Next steps in the application process</li>
+                <li>Support contact information</li>
+            </ul>
+
+            <h3>Application Deletion Email</h3>
+            <p>When you delete your application, you'll receive a confirmation email with:</p>
+            <ul>
+                <li>Confirmation that your application was successfully deleted</li>
+                <li>The application ID that was removed</li>
+                <li>Information about reapplying if desired</li>
+            </ul>
+
+            <div class="info-box">
+                <strong>Important:</strong> Keep your application ID safe. It's the only way to delete your application if you need to withdraw it later.
+            </div>
+        </section>
+
+        <section id="error-handling" class="section">
+            <h2>Error Handling</h2>
+            <p>The API uses conventional HTTP response codes to indicate the success or failure of requests. Error responses include detailed error messages and error types to help diagnose issues.</p>
+
+            <h3>HTTP Status Codes</h3>
+            
+            <div class="error-box">
+                <h4><span class="error-code">400</span> INVALID_REQUEST</h4>
+                <p><strong>Cause:</strong> Request is missing required fields or contains invalid data.</p>
+                <p><strong>Resolution:</strong> Verify all required fields are present and correctly formatted. Ensure email format is valid and year is between 2025-2030.</p>
+            </div>
+
+            <div class="error-box">
+                <h4><span class="error-code">400</span> EMAIL_ALREADY_EXISTS</h4>
+                <p><strong>Cause:</strong> An application with the provided email address already exists.</p>
+                <p><strong>Resolution:</strong> Each email address can only have one application. Use the deletion endpoint to remove your existing application if you want to submit a new one.</p>
+            </div>
+
+            <div class="error-box">
+                <h4><span class="error-code">400</span> INVALID_APPLICATION_ID</h4>
+                <p><strong>Cause:</strong> The application ID is missing or doesn't start with <code>app_</code>.</p>
+                <p><strong>Resolution:</strong> Verify the application ID is correct and includes the <code>app_</code> prefix.</p>
+            </div>
+
+            <div class="error-box">
+                <h4><span class="error-code">404</span> APPLICATION_NOT_FOUND</h4>
+                <p><strong>Cause:</strong> The specified application ID does not exist in our system.</p>
+                <p><strong>Resolution:</strong> Verify the application ID is correct. Contact support if you've lost your application information.</p>
+            </div>
+
+            <div class="error-box">
+                <h4><span class="error-code">429</span> RATE_LIMIT_EXCEEDED</h4>
+                <p><strong>Cause:</strong> Too many requests sent within the allowed time window on the <code>/apply</code> endpoint.</p>
+                <p><strong>Resolution:</strong> Wait 5 minutes before retrying. Current limit: 10 requests per 5-minute window.</p>
+            </div>
+
+            <div class="error-box">
+                <h4><span class="error-code">500</span> DATABASE_ERROR</h4>
+                <p><strong>Cause:</strong> Internal server error occurred while processing the request.</p>
+                <p><strong>Resolution:</strong> Retry the request after a few minutes. If the problem persists, contact our support team.</p>
+            </div>
+
+            <h3>Error Response Format</h3>
+            <div class="code-block json">{
+  <span class="json-key">"error"</span>: <span class="json-string">"Invalid request data"</span>,
+  <span class="json-key">"details"</span>: [
+    <span class="json-string">"firstName is a required field"</span>
+  ],
+  <span class="json-key">"errorType"</span>: <span class="json-string">"INVALID_REQUEST"</span>
+}</div>
+        </section>
+
+        <section id="rate-limiting" class="section">
+            <h2>Rate Limiting</h2>
+            <p>To ensure fair usage and system stability, the API implements rate limiting on the <code>/apply</code> endpoint based on IP address.</p>
+            
+            <div class="info-box">
+                <strong>Current Limits:</strong>
+                <ul>
+                    <li>10 requests per 5-minute window on <code>/apply</code> endpoint</li>
+                    <li>Limit resets every 5 minutes</li>
+                    <li>Rate limiting is applied per IP address</li>
+                    <li>Other endpoints (like <code>/health</code>) are not rate limited</li>
+                </ul>
+            </div>
+
+            <h3>Rate Limit Response</h3>
+            <p>When you exceed the rate limit, you'll receive:</p>
+            <div class="code-block json">{
+  <span class="json-key">"error"</span>: <span class="json-string">"Too many requests, please try again later (like in a min)."</span>,
+  <span class="json-key">"errorType"</span>: <span class="json-string">"RATE_LIMIT_EXCEEDED"</span>
+}</div>
+        </section>
+
+        <section id="support" class="section">
+            <h2>Support</h2>
+            <p>If you encounter technical difficulties or need assistance with the API, our support team is available to help.</p>
+            
+            <div class="info-box">
+                <strong>Before contacting support:</strong>
+                <ul>
+                    <li>Check the error code and resolution steps above</li>
+                    <li>Verify your request format matches the examples</li>
+                    <li>Ensure you haven't exceeded rate limits (10 requests per 5 minutes)</li>
+                    <li>Check your email for confirmation messages</li>
+                    <li>Try the request again after a few minutes</li>
+                </ul>
+            </div>
+
+            <p>For application-related questions or to learn more about the program, visit our <a href="https://madison.dssdglobal.org/" target="_blank" style="color: #0366d6;">main website</a>.</p>
+        </section>
+    </main>
 </body>
 </html>
