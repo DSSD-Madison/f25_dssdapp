@@ -163,18 +163,23 @@ const sendEmail = async (to: string, subject: string, html: string, text?: strin
     return { success: false, error: 'Email service not configured' };
   }
 
-  try {
-    console.log(`Sending email to: ${to}`);
-    
-    const info = await transporter.sendMail({
-      from: process.env.GMAIL_USER,
-      to,
-      subject,
-      html,
-      text
+  try {    
+    await new Promise((resolve, reject) => {
+      transporter!.sendMail({
+        from: process.env.GMAIL_USER,
+        to,
+        subject,
+        html,
+        text
+      }, (error, info) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(info);
+        }
+      });
     });
 
-    console.log(`Email sent successfully to ${to}, ID: ${info.messageId}`);
     return { success: true };
     
   } catch (error) {
@@ -265,8 +270,9 @@ app.post('/apply', async (req, res) => {
     sendWelcomeEmail(firstName, lastName, email, applicationId)
       .then(result => {
         if (result.success) {
-          console.log(`Welcome email sent successfully to ${email}`);
-        } else {
+          // Email sent successfully
+        } 
+        else {
           console.error(`Failed to send welcome email to ${email}:`, result.error);
         }
       })
@@ -313,8 +319,9 @@ app.delete('/apply?', async (req, res) => {
       sendDeletionEmail(userData.firstName, userData.lastName, userData.email, applicationId)
         .then(result => {
           if (result.success) {
-            console.log(`Deletion email sent successfully to ${userData.email}`);
-          } else {
+            // Email sent successfully
+          } 
+          else {
             console.error(`Failed to send deletion email to ${userData.email}:`, result.error);
           }
         })
@@ -338,10 +345,4 @@ app.delete('/apply?', async (req, res) => {
 // Start the Express server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  console.log(`Environment: ${isDevelopment ? 'development' : 'production'}`);
-  if (transporter) {
-    console.log('Email service: Enabled');
-  } else {
-    console.log('Email service: Disabled (check email configuration)');
-  }
 });
