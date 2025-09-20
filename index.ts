@@ -14,6 +14,7 @@ dotenv.config();
 // Environment configuration
 const isDevelopment = process.env.NODE_ENV === 'development';
 const PORT = process.env.PORT || 8080;
+const DB_COLLECTION = 'applications_f25';
 
 console.log(`Starting API in ${isDevelopment ? 'development' : 'production'} mode`);
 
@@ -246,7 +247,7 @@ app.post('/apply', async (req, res) => {
     const createdAt = new Date().toISOString();
 
     // First check if email already exists in firestore
-    const existingApplications = await db.collection('applications_f2025')
+    const existingApplications = await db.collection(DB_COLLECTION)
       .where('email', '==', email)
       .get();
 
@@ -255,7 +256,7 @@ app.post('/apply', async (req, res) => {
     }
 
     // Store the application in Firestore
-    const docRef = await db.collection('applications_f2025').add({
+    const docRef = await db.collection(DB_COLLECTION).add({
       firstName,
       lastName,
       email,
@@ -304,7 +305,7 @@ app.delete('/apply?', async (req, res) => {
   const docId = applicationId.replace('app_', '');
   
   try {
-    const docRef = db.collection('applications_f2025').doc(docId);
+    const docRef = db.collection(DB_COLLECTION).doc(docId);
     const doc = await docRef.get();
     
     if (!doc.exists) {
