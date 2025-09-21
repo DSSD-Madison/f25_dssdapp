@@ -124,7 +124,7 @@ Ensure the following environment variables are set in your `.env` file:
 ```env
 NODE_ENV=development
 PORT=8080
-FIREBASE_SERVICE_ACCOUNT_PATH=./path/to/firebase-service-account.json
+FIREBASE_SERVICE_ACCOUNT={"type": "service_account", "project_id": "oa-madison","private_key_id":.....
 GMAIL_USER=your-email@gmail.com
 GMAIL_APP_PASSWORD=your-app-password
 ```
