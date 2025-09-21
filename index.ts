@@ -47,7 +47,10 @@ try {
     auth: {
       user: process.env.GMAIL_USER,
       pass: process.env.GMAIL_APP_PASSWORD
-    }
+    },
+    pool: true,           // Use connection pooling
+    maxConnections: 3,    // Max 3 simultaneous connections  
+    maxMessages: 50       // Reuse connections for up to 50 emails
   });
   
   // Verify email configuration on startup
@@ -56,11 +59,13 @@ try {
       console.error('Email configuration error:', error);
       console.warn('Email sending will be disabled');
       transporter = null;
-    } else {
+    } 
+    else {
       console.log('Email configuration verified successfully');
     }
   });
-} catch (error) {
+} 
+catch (error) {
   console.error('Failed to initialize email transporter:', error);
   console.warn('Email sending will be disabled');
 }
@@ -68,6 +73,7 @@ try {
 const app = express();
 
 app.use(express.json());
+app.set('trust proxy', 1);
 
 // Rate limiter configuration
 const limiter = rateLimit({
