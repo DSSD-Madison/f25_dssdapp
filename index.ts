@@ -29,6 +29,7 @@ const db = initializeFirebase();
 
 // Initialize Express app
 const app = express();
+app.set('trust proxy', 1);
 app.use(express.json());
 
 // Health check endpoint
