@@ -106,31 +106,15 @@ This API allows users to apply for the **Data Science for Sustainable Developmen
 
 4. **Email Notifications**:
 
-   * After application submission, a **welcome email** is sent with application details.
+   * After application submission, a **application confirmation email** is sent with application details.
    * After application deletion, a **deletion confirmation email** is sent.
 
 ## Dependencies
 
 * **Express**: Web framework for routing.
 * **Firebase Admin SDK**: To interact with Firestore for data storage.
-* **Nodemailer**: For sending email notifications.
+* **Sendgrid**: For sending email notifications.
 * **Yup**: For validating incoming application data.
 * **dotenv**: For managing environment variables.
-
-## Environment Variables
-
-Ensure the following environment variables are set in your `.env` file:
-
-```env
-NODE_ENV=development
-PORT=8080
-FIREBASE_SERVICE_ACCOUNT={"type": "service_account", "project_id": "oa-madison","private_key_id":.....
-GMAIL_USER=your-email@gmail.com
-GMAIL_APP_PASSWORD=your-app-password
 ```
-
-## Notes
-
-* Ensure Firebase Firestore is properly configured and accessible via the provided service account.
-* If the email service is not configured correctly, email-related features (welcome and deletion emails) will be skipped.
 
