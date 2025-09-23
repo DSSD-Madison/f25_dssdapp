@@ -5,7 +5,6 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch index.ts",
-    "prestart": "npm run build",
     "start": "node dist/index.js",
     "build": "tsc",
     "prebuild": "npm install",
